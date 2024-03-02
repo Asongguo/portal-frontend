@@ -3,12 +3,12 @@ FROM node:14 as build
 WORKDIR /app
 COPY package*.json ./
 RUN npm i
-COPY . .
+#COPY . .
 #RUN npm run build
 
 # Stage 2 - Serve the application with Nginx
 FROM nginx:latest
-COPY --from=build /app/ /usr/share/nginx/html
+COPY --from=build /app/package.json /usr/share/nginx/html
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf.template
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
