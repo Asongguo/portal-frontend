@@ -47,7 +47,7 @@ jobs:
       - name: 'Deploy Staging'
         uses: 'deliverybot/helm@v1'
         with:
-          release: '${{ POFE_DOCKER_IMAGE_NAME }}'
+          release: '${{ env.POFE_DOCKER_IMAGE_NAME }}'
           namespace: 'test'
           chart: 'helm-chart'
           token: '${{ github.token }}'
