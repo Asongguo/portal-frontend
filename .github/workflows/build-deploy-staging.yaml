@@ -44,17 +44,10 @@ jobs:
           push: true
           tags: '${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_NAMESPACE }}/${{ env.POFE_DOCKER_IMAGE_NAME }}:${{ github.sha }}'
 
-      #- name: Setup Kubeconfig
-      #  uses: Azure/k8s-set-context@v3
-      #  with:
-      #    kubeconfig: ${{ secrets.KUBECONFIG }}
-
       - name: Setup Kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo ${{ secrets.KUBECONFIG }} > ~/.kube/config
-          chmod 600 ~/.kube/config
-          export KUBECONFIG="~/.kube/config"
+        uses: Azure/k8s-set-context@v3
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
       - name: Bake Manifest
         uses: azure/k8s-bake@v2.4
