@@ -53,7 +53,7 @@ jobs:
         run: |
           mkdir -p ~/.kube
           echo ${{ secrets.KUBECONFIG }} > ~/.kube/config
-          chown 600 ~/.kube/config
+          chmod 600 ~/.kube/config
 
       - name: Bake Manifest
         uses: azure/k8s-bake@v2.4
