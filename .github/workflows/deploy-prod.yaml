@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline Deploy Prod
 
 # The concurrency group is then named ci-cd-pipeline-master for workflows triggered by the master branch.
 # As a result, only one workflow will be in progress at a time for each branch.
