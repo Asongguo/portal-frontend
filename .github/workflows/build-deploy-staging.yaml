@@ -65,10 +65,6 @@ jobs:
           helmChart: './helm-chart/'
           overrides: |
             image.tag:${{ github.sha }}
-            env[0].name:'API_URL'
-            env[0].value:'http://portal-backend'
-            env[1].name:'WS_URL'
-            env[1].value:'http://portal-backend-signalr'
           helm-version: 'latest'
         id: bake
 
