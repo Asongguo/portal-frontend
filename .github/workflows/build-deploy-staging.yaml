@@ -1,0 +1,58 @@
+name: CI/CD Pipeline
+
+# The concurrency group is then named ci-cd-pipeline-master for workflows triggered by the master branch.
+# As a result, only one workflow will be in progress at a time for each branch.
+concurrency: ci-cd-pofe-pipeline-${{ github.ref }}
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+env:
+  REGISTRY_HOST: 'registry.magicdoor.io'
+  REGISTRY_NAMESPACE: 'magicdoor'
+  REGISTRY_USERNAME: 'magicdoor'
+  POFE_DOCKER_IMAGE_NAME: 'portal-frontend'
+  STAGING_NAMESPACE: 'test'
+  PROD_NAMESPACE: 'prod'
+
+jobs:
+  buildPOFEDockerImage:
+    runs-on: ubuntu-latest
+    name: Build POFE docker image
+    outputs:
+      IMAGE_URL: ${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_NAMESPACE }}/${{ env.POFE_DOCKER_IMAGE_NAME }}:${{ github.sha }}
+    steps:
+    
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Login to Harbor Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY_HOST }}
+          username: ${{ env.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          file: Dockerfile
+          context: .
+          push: true
+          tags: '${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_NAMESPACE }}/${{ env.POFE_DOCKER_IMAGE_NAME }}:${{ github.sha }}'
+
+      - name: 'Deploy Staging'
+        uses: 'deliverybot/helm@v1'
+        with:
+          release: '${{ POFE_DOCKER_IMAGE_NAME }}'
+          namespace: 'test'
+          chart: 'helm-chart'
+          token: '${{ github.token }}'
+          values: |
+            image:
+              tag: ${{ github.sha }}
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'

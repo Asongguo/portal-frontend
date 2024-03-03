@@ -6,14 +6,16 @@ concurrency: ci-cd-pofe-pipeline-${{ github.ref }}
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - '*'
 
 env:
   REGISTRY_HOST: 'registry.magicdoor.io'
   REGISTRY_NAMESPACE: 'magicdoor'
   REGISTRY_USERNAME: 'magicdoor'
   POFE_DOCKER_IMAGE_NAME: 'portal-frontend'
+  STAGING_NAMESPACE: 'test'
+  PROD_NAMESPACE: 'prod'
 
 jobs:
   buildPOFEDockerImage:
@@ -40,3 +42,16 @@ jobs:
           context: .
           push: true
           tags: '${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_NAMESPACE }}/${{ env.POFE_DOCKER_IMAGE_NAME }}:${{ github.sha }}'
+
+      - name: 'Deploy Staging'
+        uses: 'deliverybot/helm@v1'
+        with:
+          release: '${{ POFE_DOCKER_IMAGE_NAME }}'
+          namespace: 'test'
+          chart: 'helm-chart'
+          token: '${{ github.token }}'
+          values: |
+            image:
+              tag: ${{ github.sha }}
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
