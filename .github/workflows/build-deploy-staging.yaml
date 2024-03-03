@@ -47,18 +47,7 @@ jobs:
       - name: Setup Kubeconfig
         uses: Azure/k8s-set-context@v3
         with:
-<<<<<<< HEAD
-          release: '${{ env.POFE_DOCKER_IMAGE_NAME }}'
-          namespace: 'test'
-          chart: 'helm-chart'
-          token: '${{ github.token }}'
-          values: |
-            image:
-              tag: ${{ github.sha }}
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
-=======
-          kubeconfig: ${{ secrets.KUBECONFIG }}
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
 
       - name: Bake Manifest
         uses: azure/k8s-bake@v2.4
@@ -75,4 +64,3 @@ jobs:
         with:
           manifests: ${{ steps.bake.outputs.manifestsBundle }}
           namespace: 'test'
->>>>>>> c26b3b2 (fix)
