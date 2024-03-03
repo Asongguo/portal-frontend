@@ -44,8 +44,6 @@ jobs:
           push: true
           tags: '${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_NAMESPACE }}/${{ env.POFE_DOCKER_IMAGE_NAME }}:${{ github.sha }}'
 
-      - run: |
-          echo ${{ secrets.KUBE_CONFIG }}
       - name: Setup Kubeconfig
         uses: Azure/k8s-set-context@v3
         with:
