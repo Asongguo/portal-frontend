@@ -1,8 +1,8 @@
 # Stage 1 - Build the application
-FROM node:14 as build
-WORKDIR /app
-COPY package*.json ./
-RUN npm i
+#FROM node:14 as build
+#WORKDIR /app
+#COPY package*.json ./
+#RUN npm i
 #COPY . .
 #RUN npm run build
 
