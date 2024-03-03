@@ -49,6 +49,9 @@ jobs:
     name: Deploy Staging
     steps:
 
+      - name: Check out code
+        uses: actions/checkout@v3
+
       - name: Setup Kubeconfig
         uses: Azure/k8s-set-context@v3
         with:
