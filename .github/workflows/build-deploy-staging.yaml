@@ -54,6 +54,7 @@ jobs:
           mkdir -p ~/.kube
           echo ${{ secrets.KUBECONFIG }} > ~/.kube/config
           chmod 600 ~/.kube/config
+          export KUBECONFIG="~/.kube/config"
 
       - name: Bake Manifest
         uses: azure/k8s-bake@v2.4
