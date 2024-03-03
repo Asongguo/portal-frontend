@@ -47,7 +47,7 @@ jobs:
       - name: Setup Kubeconfig
         uses: Azure/k8s-set-context@v3
         with:
-          kubeconfig: '${{ secrets.KUBECONFIG }}'
+          kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Bake Manifest
         uses: azure/k8s-bake@v2.4
