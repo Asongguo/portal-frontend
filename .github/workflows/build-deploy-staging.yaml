@@ -44,6 +44,11 @@ jobs:
           push: true
           tags: '${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_NAMESPACE }}/${{ env.POFE_DOCKER_IMAGE_NAME }}:${{ github.sha }}'
 
+  deployStaging:
+    runs-on: ubuntu-latest
+    name: Deploy Staging
+    steps:
+
       - name: Setup Kubeconfig
         uses: Azure/k8s-set-context@v3
         with:
@@ -53,6 +58,7 @@ jobs:
         uses: azure/k8s-bake@v2.4
         with:
           renderEngine: 'helm'
+          releaseName: ${{ env.POFE_DOCKER_IMAGE_NAME }}
           helmChart: './helm-chart/'
           overrides: |
             image.tag: ${{ github.sha }}
